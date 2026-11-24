@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURUM NEWS V2 | The Gold Standard in Global Journalism</title>
+  <meta name="description" content="Portal Web de Noticias Gold Editorial V2 conectado a la API de NewsData.io con lectura completa, marcadores, zoom tipográfico, TTS con velocidad variable, telemetría y modal WebView.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="theme-color" content="#0B0D10">
+
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Estilos Maestros Gold Editorial V2 -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body id="top">
+
+  <!-- =========================================================================
+       1. HEADER FIJO Y BARRA DE NAVEGACIÓN 100% RESPONSIVE
+  ========================================================================== -->
+  <header class="header-sticky">
+    <div class="header-top-row">
+      <!-- Marca / Logo SVG Propio -->
+      <a href="#top" class="brand-link" title="AURUM NEWS V2 - Inicio">
+        <img src="assets/logo.svg" alt="AURUM NEWS V2" class="brand-logo-img">
+      </a>
+
+      <!-- Barra de Búsqueda Global -->
+      <div class="header-search-wrap">
+        <div class="search-input-group">
+          <i class="bi bi-search search-icon"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Buscar noticias globales, economía, IA, ciencia..."
+            autocomplete="off"
+          >
+          <button type="button" id="searchClearBtn" class="search-clear-btn" title="Limpiar búsqueda">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Controles de Navegación y Filtros V2 -->
+      <div class="header-actions" id="headerActions">
+        <!-- Selector de País -->
+        <select id="countrySelect" class="select-pill" title="Seleccionar País">
+          <option value="es" selected>🇪🇸 España</option>
+          <option value="mx">🇲🇽 México</option>
+          <option value="us">🇺🇸 EE.UU.</option>
+          <option value="co">🇨🇴 Colombia</option>
+          <option value="ar">🇦🇷 Argentina</option>
+          <option value="all">🌍 Todos los Países</option>
+        </select>
+
+        <!-- Selector de Idioma -->
+        <select id="languageSelect" class="select-pill" title="Seleccionar Idioma">
+          <option value="es" selected>Castellano (ES)</option>
+          <option value="en">English (EN)</option>
+          <option value="all">Todos los idiomas</option>
+        </select>
+
+        <!-- Switch Solo con Fotos -->
+        <label class="switch-label" title="Priorizar noticias con foto de portada (image=1)">
+          <input type="checkbox" id="imageOnlySwitch" class="switch-input" checked>
+          <span>Con Foto</span>
+        </label>
+
+        <!-- Botón de Marcadores / Favoritos V2 -->
+        <button type="button" id="bookmarksNavBtn" class="bookmarks-nav-btn" title="Ver mis noticias guardadas para leer más tarde">
+          <i class="bi bi-bookmark-star-fill text-warning"></i>
+          <span>Guardadas</span>
+          <span class="bookmarks-badge-count" id="bookmarksBadgeCount" style="display: none;">0</span>
+        </button>
+
+        <!-- Botón de Telemetría V2 -->
+        <button type="button" id="telemetryBtn" class="btn-external-link" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; background: var(--bg-card); border: 1px solid var(--border-gold); color: var(--gold-light);" title="Ver estadísticas y salud de la API en vivo">
+          <i class="bi bi-activity text-warning"></i> <span>Salud API</span>
+        </button>
+
+        <!-- Botón Modo Oscuro / Claro -->
+        <button type="button" id="themeToggleBtn" class="theme-toggle-btn" title="Cambiar a Modo Claro">
+          <i id="themeIcon" class="bi bi-sun-fill"></i>
+        </button>
+      </div>
+
+      <!-- Menú Hamburguesa en Móvil -->
+      <button type="button" id="hamburgerBtn" class="hamburger-btn" aria-label="Abrir menú de filtros">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+
+    <!-- Menú de Categorías Navegables Horizontal -->
+    <nav class="nav-categories-bar" aria-label="Categorías de Noticias">
+      <div class="categories-container" id="categoriesContainer">
+        <button type="button" class="category-nav-btn active" data-category="top">
+          <i class="bi bi-star-fill text-warning"></i> Principales
+        </button>
+        <button type="button" class="category-nav-btn" data-category="business">
+          <i class="bi bi-graph-up-arrow"></i> Negocios
+        </button>
+        <button type="button" class="category-nav-btn" data-category="technology">
+          <i class="bi bi-cpu"></i> Tecnología
+        </button>
+        <button type="button" class="category-nav-btn" data-category="science">
+          <i class="bi bi-rocket-takeoff"></i> Ciencia
+        </button>
+        <button type="button" class="category-nav-btn" data-category="health">
+          <i class="bi bi-heart-pulse"></i> Salud
+        </button>
+        <button type="button" class="category-nav-btn" data-category="sports">
+          <i class="bi bi-trophy"></i> Deportes
+        </button>
+        <button type="button" class="category-nav-btn" data-category="entertainment">
+          <i class="bi bi-film"></i> Entretenimiento
+        </button>
+        <button type="button" class="category-nav-btn" data-category="world">
+          <i class="bi bi-globe-americas"></i> Mundo
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- =========================================================================
+       2. CINTILLO / TICKER EDITORIAL BREAKING NEWS & ESTADO DE CACHÉ
+  ========================================================================== -->
+  <div class="ticker-bar">
+    <div class="ticker-inner">
+      <span class="ticker-badge">
+        <i class="bi bi-lightning-charge-fill"></i> BREAKING V2
+      </span>
+      <span class="ticker-content" id="tickerText">
+        Cargando las últimas noticias globales de NewsData.io...
+      </span>
+      <span class="ticker-cache-indicator" id="tickerCacheBadge">
+        <i class="bi bi-shield-check"></i> Caché Inteligente Activa
+      </span>
+    </div>
+  </div>
+
+  <!-- Banner de Aviso Modo Demostración (Configurable en .env) -->
+  <div class="banner-info hidden" id="demoBanner">
+    <div>
+      <i class="bi bi-info-circle-fill text-warning me-2"></i>
+      <strong>Modo Demostración Activo:</strong> Navegando con el catálogo curado de alta fidelidad. 
+      Para recibir noticias en vivo directamente desde <strong>NewsData.io</strong>, configure su clave en el archivo <code>.env</code> (<code>NEWSDATA_API_KEY=tu_clave</code>) y reinicie el servidor.
+    </div>
+    <button type="button" class="banner-close-btn" id="closeBannerBtn" title="Cerrar aviso">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       3. CONTENIDO PRINCIPAL: GRID DE NOTICIAS (16 POR PÁGINA)
+  ========================================================================== -->
+  <main class="main-wrapper">
+    <!-- Encabezado de la Sección Activa -->
+    <section class="section-header-row">
+      <div class="section-title-wrap">
+        <h1 class="section-title" id="sectionTitle">Noticias Principales</h1>
+        <div class="section-meta" id="sectionMeta">AURUM NEWS Editorial · Cobertura 24/7 en tiempo real</div>
+      </div>
+      <div>
+        <span class="section-badge-count" id="sectionBadgeCount">16 noticias</span>
+      </div>
+    </section>
+
+    <!-- Grid de Tarjetas de Noticias (16 Noticias) -->
+    <section class="news-grid" id="newsGrid" aria-live="polite">
+      <!-- Los Skeleton Loaders o las tarjetas se inyectan dinámicamente desde app.js -->
+    </section>
+
+    <!-- Controles de Paginación Inteligente -->
+    <div class="pagination-wrapper" id="paginationWrapper"></div>
+  </main>
+
+  <!-- =========================================================================
+       4. MODAL PANORÁMICO DUAL (MODO LECTOR COMPLETO Y WEBVIEW)
+  ========================================================================== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+    <div class="modal-panoramic" id="modalBody">
+      
+      <!-- Cabecera del Modal con Pestañas y Acciones -->
+      <div class="modal-header">
+        <div class="modal-tabs">
+          <button type="button" class="modal-tab-btn active" id="tabReaderBtn">
+            <i class="bi bi-journal-richtext"></i> Modo Noticia Completa
+          </button>
+          <button type="button" class="modal-tab-btn" id="tabWebviewBtn">
+            <i class="bi bi-globe"></i> Vista Web (WebView)
+          </button>
+        </div>
+
+        <div class="modal-header-actions">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-external-link" id="modalExternalLink" title="Abrir en el portal original">
+            <span>Fuente Original</span> <i class="bi bi-box-arrow-up-right"></i>
+          </a>
+          <button type="button" class="btn-close-modal" id="modalCloseBtn" aria-label="Cerrar modal (Esc)">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Dirección / Metadatos de Navegación -->
+      <div class="modal-address-bar">
+        <i class="bi bi-lock-fill text-warning me-2"></i>
+        <span class="modal-url-text" id="modalUrlText">https://newsdata.io/article/...</span>
+        <button type="button" class="btn-copy-url" id="btnCopyUrl" title="Copiar enlace al portapapeles">
+          <i class="bi bi-clipboard"></i> Copiar
+        </button>
+      </div>
+
+      <!-- Cuerpo del Modal -->
+      <div class="modal-content-area">
+        
+        <!-- PESTAÑA 1: MODO NOTICIA COMPLETA (LECTOR ÍNTEGRO ENRIQUECIDO) -->
+        <div class="reader-view" id="readerView">
+          <article class="reader-article">
+            
+            <!-- TOOLBAR PRO V2: ACCESIBILIDAD TIPOGRÁFICA, BOOKMARK E IMPRESIÓN -->
+            <div class="reader-pro-toolbar">
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: var(--gold-light);">
+                  <i class="bi bi-fonts"></i> Tamaño de Texto:
+                </span>
+                <div class="font-size-group">
+                  <button type="button" class="font-size-btn" id="btnFontSm" title="Texto pequeño">A-</button>
+                  <button type="button" class="font-size-btn active" id="btnFontMd" title="Texto estándar">A</button>
+                  <button type="button" class="font-size-btn" id="btnFontLg" title="Texto grande">A+</button>
+                </div>
+
+                <!-- Botón Guardar / Favorito en Modal -->
+                <button type="button" class="btn-print-article" id="btnModalBookmark">
+                  <i class="bi bi-bookmark-plus"></i> <span>Guardar</span>
+                </button>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="btn-print-article" id="btnPrintArticle" title="Imprimir o guardar reportaje en PDF limpio">
+                  <i class="bi bi-printer-fill"></i> <span>Imprimir / PDF</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Metadatos de Cabecera -->
+            <div class="reader-meta-top">
+              <span class="badge-category-reader" id="readerCategory">TECNOLOGÍA</span>
+              <span class="reader-reading-time" id="readerReadingTime"><i class="bi bi-book"></i> ~3 min lectura</span>
+              <span class="reader-word-count" id="readerWordCount">480 palabras</span>
+            </div>
+
+            <h1 class="reader-title" id="readerTitle">Cargando titular completo del reportaje...</h1>
+
+            <!-- Barra de Autoría y Fecha -->
+            <div class="reader-author-bar">
+              <div class="author-info">
+                <i class="bi bi-person-circle fs-3 text-warning"></i>
+                <div>
+                  <div class="author-name" id="readerAuthor">Redacción Periodística Especializada</div>
+                  <div class="author-source">Fuente: <strong id="readerSource">AURUM NEWS Global</strong></div>
+                </div>
+              </div>
+              <div class="article-date-badge" id="readerDate">Lunes, 23 de Noviembre de 2026</div>
+            </div>
+
+            <!-- MOTOR DE NARRACIÓN POR VOZ HUMANA (TTS - ESTÁNDAR JPV PRO CON VELOCIDAD V2) -->
+            <div class="tts-toolbar-box">
+              <div class="tts-header-row">
+                <div class="tts-title-wrap">
+                  <i class="bi bi-mic-fill tts-mic-icon"></i>
+                  <div>
+                    <h4 class="tts-main-heading">Narración por Voz Humana Editorial</h4>
+                    <p class="tts-sub-heading">Síntesis auditiva continua del reportaje íntegro con velocidad variable</p>
+                  </div>
+                </div>
+
+                <!-- Selector de Velocidad V2 -->
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <small style="font-size: 0.72rem; color: var(--gold-light); font-weight: 700;">Velocidad:</small>
+                  <select id="ttsRateSelect" class="tts-rate-select" title="Velocidad de narración">
+                    <option value="0.8">0.8x Lenta</option>
+                    <option value="1.0" selected>1.0x Normal</option>
+                    <option value="1.2">1.2x Fluida</option>
+                    <option value="1.5">1.5x Rápida</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="tts-controls-row">
+                <!-- Botones de Reproducción -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <button type="button" class="btn btn-sm btn-dark fw-bold border-2 border-dark d-flex align-items-center gap-1 shadow-sm btn-tts-play" id="btnTtsPlay" style="box-shadow: 2px 2px 0 #000;">
+                    <i class="bi bi-play-fill text-warning fs-5"></i> <span>Escuchar Noticia Completa</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-dark fw-bold border-2 border-dark d-none align-items-center gap-1 shadow-sm btn-tts-pause" id="btnTtsPause" style="box-shadow: 2px 2px 0 #000;">
+                    <i class="bi bi-pause-fill text-danger fs-5"></i> <span>Pausar</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-warning fw-bold border-2 border-dark text-dark d-none align-items-center gap-1 shadow-sm btn-tts-resume" id="btnTtsResume" style="box-shadow: 2px 2px 0 #000;">
+                    <i class="bi bi-play-circle-fill fs-5"></i> <span>Reanudar</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger fw-bold border-2 border-dark text-white d-none align-items-center gap-1 shadow-sm btn-tts-stop" id="btnTtsStop" style="box-shadow: 2px 2px 0 #000;">
+                    <i class="bi bi-stop-fill fs-5"></i> <span>Detener</span>
+                  </button>
+
+                  <!-- Indicador de Estado con Punto Pulsante -->
+                  <div class="badge bg-dark text-white border border-dark d-none align-items-center gap-2 px-2 py-1 tts-status-badge" id="ttsStatusBadge">
+                    <span class="audio-wave-dot"></span>
+                    <span class="small tts-status-text" id="ttsStatusText">Narrando noticia...</span>
+                  </div>
+                </div>
+
+                <!-- Consola de Volumen Táctil Sincronizada -->
+                <div class="d-flex align-items-center gap-1 p-1 bg-light border border-dark rounded-2" style="box-shadow: 2px 2px 0 #000;">
+                  <button type="button" class="btn btn-sm btn-outline-dark fw-bold px-2 py-0 border-2" id="btnVolDown" title="Disminuir volumen">
+                    <i class="bi bi-volume-down-fill"></i> -
+                  </button>
+                  <div class="d-flex align-items-center gap-1" style="min-width: 65px; max-width: 95px;">
+                    <i class="bi bi-volume-up-fill text-dark fs-6 tts-volume-icon" id="ttsVolumeIcon"></i>
+                    <input type="range" class="form-range m-0 tts-volume-slider" id="ttsVolumeSlider" min="0" max="1" step="0.05" value="1" style="accent-color: #DA291C; height: 6px;">
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-dark fw-bold px-2 py-0 border-2" id="btnVolUp" title="Aumentar volumen">
+                    + <i class="bi bi-volume-up-fill"></i>
+                  </button>
+                  <span class="badge bg-dark text-white border border-dark fw-bold tts-volume-badge" id="ttsVolumeBadge" style="min-width: 42px; font-size: 0.75rem;">100%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Imagen Hero de Alta Definición -->
+            <div class="reader-hero-wrap">
+              <img src="assets/fallback-news.svg" alt="Portada de la Noticia" class="reader-hero-img" id="readerImg">
+            </div>
+
+            <!-- Tarjeta de Puntos Clave / Key Takeaways -->
+            <div class="key-takeaways-card">
+              <div class="takeaways-header">
+                <i class="bi bi-lightbulb-fill text-warning"></i>
+                <span>Puntos Clave / Key Takeaways</span>
+              </div>
+              <ul class="takeaways-list" id="keyTakeawaysList">
+                <li><i class="bi bi-check-circle-fill text-warning"></i> <span>Cargando análisis y puntos centrales de la noticia...</span></li>
+              </ul>
+            </div>
+
+            <!-- Banner Informativo del Texto Completo -->
+            <div class="full-text-banner">
+              <i class="bi bi-file-earmark-text-fill text-warning fs-5"></i>
+              <span id="fullTextBannerText">Reportaje Íntegro Extraído Directamente del Sitio Web de Origen</span>
+            </div>
+
+            <!-- Cuerpo del Reportaje (Párrafos Reales Extraídos) -->
+            <div class="reader-content-body font-md" id="readerContentBody">
+              <p>Cargando cuerpo completo de la noticia...</p>
+            </div>
+
+            <!-- Barra de Acciones y Compartir al Pie del Artículo -->
+            <div class="reader-footer-actions">
+              <div class="share-buttons-group">
+                <span class="share-label"><i class="bi bi-share-fill"></i> Difundir:</span>
+                <button type="button" class="social-share-btn share-whatsapp" id="btnShareWhatsApp" title="Compartir en WhatsApp">
+                  <i class="bi bi-whatsapp"></i>
+                </button>
+                <button type="button" class="social-share-btn share-twitter" id="btnShareTwitter" title="Compartir en X (Twitter)">
+                  <i class="bi bi-twitter-x"></i>
+                </button>
+                <button type="button" class="social-share-btn share-native" id="btnShareNative" title="Compartir en el dispositivo">
+                  <i class="bi bi-share"></i>
+                </button>
+              </div>
+
+              <a href="#" target="_blank" rel="noopener noreferrer" class="btn-external-link" id="readerActionLink">
+                <span>Ver en Portal de Origen</span> <i class="bi bi-box-arrow-up-right"></i>
+              </a>
+            </div>
+
+          </article>
+        </div>
+
+        <!-- PESTAÑA 2: VISTA WEB (WEBVIEW EMBEBIDO) -->
+        <div class="webview-view" id="webviewView" style="display: none;">
+          <div class="webview-toolbar">
+            <div class="webview-status">
+              <i class="bi bi-shield-check text-success"></i> Entorno Aislado Seguro
+            </div>
+            <div class="webview-controls">
+              <button type="button" class="btn-copy-url" id="btnReloadIframe" title="Recargar iframe">
+                <i class="bi bi-arrow-clockwise"></i> Recargar
+              </button>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="btn-external-link" id="webviewOpenExtBtn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+                <i class="bi bi-box-arrow-up-right"></i> Abrir en Pestaña Exterior
+              </a>
+            </div>
+          </div>
+
+          <iframe 
+            src="about:blank" 
+            class="webview-iframe" 
+            id="newsIframe" 
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            loading="lazy"
+            title="Vista embebida de la noticia"
+          ></iframe>
+
+          <!-- Fallback en caso de bloqueo por X-Frame-Options -->
+          <div class="iframe-blocked-fallback" id="iframeBlockedFallback">
+            <div class="iframe-blocked-card">
+              <i class="bi bi-shield-lock-fill iframe-blocked-icon"></i>
+              <h3 class="mb-2" style="font-family: 'Playfair Display', serif;">Protección de Contenido de la Fuente</h3>
+              <p class="text-muted mb-4" style="line-height: 1.6;">
+                El portal de la fuente original restringe el embebido directo en iframes mediante cabeceras de seguridad <code>X-Frame-Options</code> o CSP. Toda la noticia está disponible en la pestaña <strong>Modo Noticia Completa</strong> o puede abrirla directamente en una nueva pestaña.
+              </p>
+              <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <button type="button" class="btn-external-link" id="btnBackToReader" style="font-size: 0.92rem; padding: 0.65rem 1.25rem;">
+                  <i class="bi bi-journal-richtext"></i> Leer Toda la Noticia Aquí
+                </button>
+                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-external-link" id="iframeExternalBtn" style="font-size: 0.92rem; padding: 0.65rem 1.25rem; background: var(--bg-surface); color: var(--gold-light) !important; border: 1px solid var(--gold-primary);">
+                  Abrir en Fuente Original <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       5. MODAL DE TELEMETRÍA Y ESTADÍSTICAS V2 (/api/health)
+  ========================================================================== -->
+  <div class="modal-overlay" id="telemetryModalOverlay" role="dialog" aria-modal="true" aria-labelledby="telemetryModalTitle">
+    <div class="modal-panoramic" style="max-width: 640px; margin: 5vh auto;">
+      <div class="modal-header">
+        <h4 style="font-weight: 800; color: var(--gold-light); margin: 0; font-family: 'Playfair Display', serif;" id="telemetryModalTitle">
+          <i class="bi bi-activity text-warning"></i> Telemetría y Salud del Servidor V2
+        </h4>
+        <button type="button" class="btn-close-modal" id="telemetryModalCloseBtn">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div style="padding: 1.5rem;" id="telemetryModalContent">
+        <!-- Contenido inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       6. SECCIÓN DE AUTORÍA CANÓNICA (ING. JUANCITO PEÑA VIZCAÍNO)
+  ========================================================================== -->
+  <div class="author-section-wrapper">
+    <div class="footer-profile-card">
+      <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center;">
+        
+        <!-- LATERAL IZQUIERDO: BIOGRAFÍA, FILOSOFÍA Y DOCENCIA -->
+        <div style="flex: 1 1 540px; min-width: 300px;">
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <img 
+              src="https://avatars.githubusercontent.com/u/38921558?v=4" 
+              alt="Ing. Juancito Peña Vizcaíno" 
+              style="width: 86px; height: 86px; object-fit: cover; border-radius: 50%; border: 2.5px solid #000000; box-shadow: 3px 3px 0px #000000; flex-shrink: 0;"
+            >
+            <div>
+              <h4 style="font-weight: 800; margin-bottom: 0.25rem; color: #000000 !important; font-size: 1.35rem;">Ing. Juancito Peña Vizcaíno</h4>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+                <span style="background: #000000; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">Data Analyst</span>
+                <span style="background: #DA291C; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">Full Stack Dev</span>
+                <span style="background: #0D6EFD; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">AI &amp; API Expert</span>
+                <span style="background: #FFC107; color: #000000; font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 4px;">Líder I+D+i</span>
+              </div>
+            </div>
+          </div>
+          
+          <p style="color: #0F172A !important; font-weight: 500; line-height: 1.65; margin-bottom: 0.85rem; font-size: 0.94rem;">
+            <strong>Ingeniero en Sistemas y Computación</strong> con Postgrado en <strong>Ingeniería de Software</strong> y Maestría en <strong>Sistemas Mención Gerencial</strong> (<em>Universidad Dominicana O&amp;M</em>). Con más de <strong>15 años de trayectoria</strong>, transformo problemas de alta complejidad en soluciones escalables. Durante el último año, he centrado mi trabajo en <strong>I+D+i (Investigación, Desarrollo e Innovación)</strong>, explorando arquitecturas de <strong>IA Generativa (RAG / LLMs)</strong>, integración de agentes autónomos con bases de datos y orquestación de APIs empresariales.
+          </p>
+
+          <p style="color: #0F172A !important; font-weight: 500; line-height: 1.65; margin-bottom: 0; font-size: 0.94rem;">
+            🔬 <strong>Mi motor es el aprendizaje a través de los retos:</strong> me apasionan los <em>casos de uso reales</em>, las <strong>pruebas técnicas rigurosas</strong>, la investigación profunda y el diseño de soluciones directas a problemas de ingeniería. 🎓 Como <strong>docente universitario</strong> y creador del canal educativo <strong>@JuancitoDevV</strong>, comparto este conocimiento práctico mediante ejercicios y proyectos de código abierto para acercar la tecnología a problemas reales. 🚀
+          </p>
+        </div>
+
+        <!-- LATERAL DERECHO: STACK VISUAL AGRUPADO & CANALES OFICIALES -->
+        <div style="flex: 1 1 380px; min-width: 280px;">
+          <div style="margin-bottom: 1.25rem;">
+            <h6 style="font-weight: 700; margin-bottom: 0.65rem; color: #000000;">
+              <i class="bi bi-stack text-danger" style="margin-right: 0.25rem;"></i> Ecosistema de Tecnologías:
+            </h6>
+
+            <div style="margin-bottom: 0.5rem;">
+              <small style="display: block; font-weight: 700; color: #000000; font-size: 0.78rem; margin-bottom: 0.2rem;">🖥️ Frontend &amp; Web:</small>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5"> HTML5</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3"> CSS3</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript"> JavaScript</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React"> React</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js"> Next.js</span>
+            </div>
+
+            <div style="margin-bottom: 0.5rem;">
+              <small style="display: block; font-weight: 700; color: #000000; font-size: 0.78rem; margin-bottom: 0.2rem;">⚙️ Backend &amp; Multiplataforma:</small>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="C#"> C#</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg" alt=".NET"> .NET / MAUI</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"> Python</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP"> PHP</span>
+            </div>
+
+            <div style="margin-bottom: 0.5rem;">
+              <small style="display: block; font-weight: 700; color: #000000; font-size: 0.78rem; margin-bottom: 0.2rem;">📊 Data Analytics &amp; Bases de Datos:</small>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg" alt="SQL Server"> SQL Server</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL"> PostgreSQL</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL"> MySQL</span>
+              <span class="tech-pill"><i class="bi bi-bar-chart-fill text-warning"></i> Power BI / DAX</span>
+            </div>
+
+            <div>
+              <small style="display: block; font-weight: 700; color: #000000; font-size: 0.78rem; margin-bottom: 0.2rem;">🤖 IA + APIs &amp; Despliegue (I+D+i):</small>
+              <span class="tech-pill"><i class="bi bi-plug-fill text-primary"></i> APIs REST</span>
+              <span class="tech-pill"><i class="bi bi-cpu-fill text-danger"></i> IA + LLMs (RAG)</span>
+              <span class="tech-pill"><i class="bi bi-robot text-success"></i> Agentes IA</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"> Git</span>
+              <span class="tech-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"> GitHub</span>
+              <span class="tech-pill"><i class="bi bi-triangle-fill text-dark" style="font-size: 0.75rem;"></i> Vercel</span>
+            </div>
+          </div>
+
+          <div>
+            <h6 style="font-weight: 700; margin-bottom: 0.5rem; color: #000000;">Canales Oficiales &amp; Redes:</h6>
+            
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
+              <a href="https://www.linkedin.com/in/juancitope%C3%B1a/" target="_blank" class="social-btn" title="LinkedIn Oficial" rel="noopener noreferrer">
+                <i class="bi bi-linkedin" style="color: #0A66C2;"></i>
+              </a>
+
+              <a href="https://www.youtube.com/@JuancitoDevV" target="_blank" class="social-btn" title="YouTube @JuancitoDevV" rel="noopener noreferrer">
+                <i class="bi bi-youtube" style="color: #DC2626;"></i>
+              </a>
+
+              <a href="https://github.com/JUANCITOPENA" target="_blank" class="social-btn" title="GitHub @JUANCITOPENA" rel="noopener noreferrer">
+                <i class="bi bi-github" style="color: #000000;"></i>
+              </a>
+
+              <a href="https://twitter.com/JuancitoPenaV" target="_blank" class="social-btn" title="X (Twitter) @JuancitoPenaV" rel="noopener noreferrer">
+                <i class="bi bi-twitter-x" style="color: #000000;"></i>
+              </a>
+
+              <a href="mailto:juancito.pena@gmail.com" class="social-btn" title="Correo Electrónico">
+                <i class="bi bi-envelope-at-fill" style="color: #DC2626;"></i>
+              </a>
+            </div>
+
+            <div style="padding: 0.75rem 1rem; background: #FFFFFF; border: 2px solid #000000; border-radius: 10px; box-shadow: 3px 3px 0 #000;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="bi bi-play-circle-fill text-danger" style="font-size: 2rem;"></i>
+                <div>
+                  <small style="display: block; font-weight: 700; color: #DC2626;">Canal Educativo de YouTube:</small>
+                  <a href="https://www.youtube.com/@JuancitoDevV" target="_blank" style="font-weight: 700; color: #000000; text-decoration: none;" rel="noopener noreferrer">
+                    @JuancitoDevV · Algoritmos, SQL, IA &amp; .NET <i class="bi bi-box-arrow-up-right small"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       7. FOOTER OFICIAL INSTITUCIONAL (ING. JUANCITO PEÑA)
+  ========================================================================== -->
+  <footer class="footer-official">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 1.5rem;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div>
+          <span style="background: #000000; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; margin-right: 0.5rem;">PROYECTO OFICIAL JPV V2</span>
+          <strong style="color: #000000;">AURUM NEWS — The Gold Standard in Global Journalism</strong>
+          <p style="font-size: 0.85rem; margin: 0.25rem 0 0; color: #475569;">
+            Plataforma editorial de noticias conectada a la API de NewsData.io con lector enriquecido, marcadores, zoom tipográfico, TTS Pro y WebView seguro.
+          </p>
+          <p style="font-size: 0.75rem; margin: 0.25rem 0 0; color: #64748B;">
+            © 2026 <strong>Ing. Juancito Peña Vizcaíno</strong>. Todos los derechos reservados.
+          </p>
+        </div>
+        <div>
+          <a href="#top" style="color: #DA291C; font-weight: 700; text-decoration: none; font-size: 0.95rem;">
+            <i class="bi bi-arrow-up-circle-fill"></i> Volver al Inicio
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts Modulares -->
+  <script src="js/mockData.js"></script>
+  <script src="js/cacheManager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

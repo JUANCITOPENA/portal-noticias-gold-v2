@@ -1,0 +1,28 @@
+{
+  "name": "aurum-news-portal-v2",
+  "version": "2.0.0",
+  "description": "AURUM NEWS V2 — The Gold Standard in Global Journalism. Portal editorial avanzado con NewsData.io API, Bookmarks, TTS con control de velocidad, zoom tipográfico, exportación PDF y Vercel Serverless.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "news",
+    "newsdata",
+    "journalism",
+    "editorial",
+    "tts",
+    "speech-synthesis",
+    "bookmarks",
+    "serverless",
+    "express",
+    "v2"
+  ],
+  "author": "Ing. Juancito Peña Vizcaíno",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14181F"/>
+      <stop offset="50%" stop-color="#0B0D10"/>
+      <stop offset="100%" stop-color="#1A1F29"/>
+    </linearGradient>
+    <linearGradient id="goldAcc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF2A3"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6508"/>
+    </linearGradient>
+    <pattern id="gridPat" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(212, 175, 55, 0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bgGrad)"/>
+  <rect width="100%" height="100%" fill="url(#gridPat)"/>
+
+  <!-- Marco Editorial Dorado -->
+  <rect x="25" y="25" width="750" height="400" fill="none" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1.5"/>
+  <rect x="35" y="35" width="730" height="380" fill="none" stroke="rgba(212, 175, 55, 0.12)" stroke-width="1"/>
+
+  <!-- Icono de Periódico Editorial -->
+  <g transform="translate(400, 200)" text-anchor="middle">
+    <!-- Círculo con resplandor -->
+    <circle cx="0" cy="-20" r="54" fill="#14181F" stroke="url(#goldAcc)" stroke-width="2"/>
+    <circle cx="0" cy="-20" r="46" fill="none" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1" stroke-dasharray="3 3"/>
+    
+    <!-- Silueta de Periódico -->
+    <g transform="translate(-24, -44)" fill="url(#goldAcc)">
+      <path d="M4 6h32c2.2 0 4 1.8 4 4v26c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4zm0 4v24h32V10H4zm4 4h14v10H8V14zm18 0h6v2h-6v-2zm0 4h6v2h-6v-2zm0 4h6v2h-6v-2zM8 26h24v2H8v-2zm0 4h24v2H8v-2z"/>
+    </g>
+
+    <!-- Texto Informativo -->
+    <text y="70" font-family="'Cinzel', Georgia, serif" font-size="20" font-weight="700" fill="url(#goldAcc)" letter-spacing="3">
+      AURUM NEWS
+    </text>
+    <text y="95" font-family="'Montserrat', sans-serif" font-size="12" font-weight="500" fill="#94A3B8" letter-spacing="2">
+      EDICIÓN EDITORIAL · COBERTURA EXCLUSIVA
+    </text>
+  </g>
+</svg>

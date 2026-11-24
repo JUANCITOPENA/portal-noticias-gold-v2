@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 80">
+  <defs>
+    <linearGradient id="logoGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF2A3"/>
+      <stop offset="35%" stop-color="#F5C518"/>
+      <stop offset="70%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#996515"/>
+    </linearGradient>
+    <linearGradient id="ringGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#6B4E1B"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Emblema Corona / Diamante Dorado -->
+  <g transform="translate(10, 8)">
+    <circle cx="32" cy="32" r="30" fill="#14181F" stroke="url(#logoGold)" stroke-width="2"/>
+    <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1" stroke-dasharray="2 3"/>
+    <!-- Escudo / Monograma -->
+    <path d="M32 14 L46 25 L40 46 L32 52 L24 46 L18 25 Z" fill="url(#logoGold)" opacity="0.25"/>
+    <!-- Letra A estilizada de Aurum -->
+    <text x="32" y="44" font-family="'Cinzel', 'Playfair Display', Georgia, serif" font-size="34" font-weight="900" fill="url(#logoGold)" text-anchor="middle" filter="url(#glow)">A</text>
+    <polygon points="32,8 35,14 41,14 36,18 38,24 32,20 26,24 28,18 23,14 29,14" fill="#FFF2A3" />
+  </g>
+
+  <!-- Tipografía AURUM NEWS -->
+  <text x="86" y="44" font-family="'Cinzel', 'Playfair Display', Georgia, serif" font-size="32" font-weight="900" letter-spacing="4" fill="url(#logoGold)">
+    AURUM
+  </text>
+  <text x="250" y="44" font-family="'Montserrat', 'Inter', sans-serif" font-size="28" font-weight="300" letter-spacing="6" fill="#F8FAFC">
+    NEWS
+  </text>
+  
+  <!-- Lema Editorial -->
+  <text x="88" y="64" font-family="'Montserrat', 'Inter', sans-serif" font-size="9.5" font-weight="600" letter-spacing="3.5" fill="#C5A059" text-transform="uppercase">
+    THE GOLD STANDARD IN GLOBAL JOURNALISM
+  </text>
+  
+  <!-- Línea decorativa dorada -->
+  <line x1="88" y1="50" x2="400" y2="50" stroke="url(#ringGold)" stroke-width="0.8" opacity="0.7"/>
+</svg>
