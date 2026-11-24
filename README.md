@@ -4,6 +4,8 @@
 > **Proyecto Oficial:** AURUM NEWS V2 — The Gold Standard in Global Journalism  
 > **Autoría & Arquitectura:** Ing. Juancito Peña Vizcaíno (Data Analyst, Full Stack Dev & Líder I+D+i)  
 > **Versión:** 2.0.0-PRO (Puerto 3001)  
+> **Repositorio Oficial:** [https://github.com/JUANCITOPENA/portal-noticias-gold-v2](https://github.com/JUANCITOPENA/portal-noticias-gold-v2)  
+> **Despliegue Global en Vercel:** [https://portal-noticias-gold-v2.vercel.app](https://portal-noticias-gold-v2.vercel.app)  
 > **Nuevas Características V2:** Marcadores / Favoritos persistentes, Zoom Tipográfico accesible, TTS con velocidad variable (0.8x a 1.5x), Impresión limpia a PDF, Modal de Telemetría en vivo y Vercel Edge Cache.  
 > **Canal Educativo:** [@JuancitoDevV](https://www.youtube.com/@JuancitoDevV)  
 > **Licencia:** MIT License
