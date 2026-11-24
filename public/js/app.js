@@ -80,6 +80,7 @@
     // Modal Panorámico
     modalOverlay: document.getElementById('modalOverlay'),
     modalBody: document.getElementById('modalBody'),
+    modalContentArea: document.querySelector('.modal-content-area'),
     modalCloseBtn: document.getElementById('modalCloseBtn'),
     modalUrlText: document.getElementById('modalUrlText'),
     btnCopyUrl: document.getElementById('btnCopyUrl'),
@@ -524,7 +525,7 @@
             <div class="card-footer-row">
               <span class="card-read-time"><i class="bi bi-book"></i> ~2 min</span>
               <button type="button" class="btn-read-more" data-action="open-modal" data-article-idx="${idx}">
-                Ver más <i class="bi bi-arrow-right"></i>
+                <span>📖 Leer Noticia Completa</span> <i class="bi bi-arrow-right-circle-fill"></i>
               </button>
             </div>
           </div>
@@ -698,13 +699,16 @@
       dom.iframeBlockedFallback.style.display = 'none';
     }
 
-    // Extracción de Texto Completo
-    await loadFullArticleContent(article);
-
-    // Abrir Modal
+    // Abrir Modal de Inmediato (Experiencia reactiva sin demoras)
     switchModalTab('reader');
     dom.modalOverlay?.classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (dom.modalContentArea) {
+      dom.modalContentArea.scrollTop = 0;
+    }
+
+    // Extracción y carga del reportaje completo
+    loadFullArticleContent(article);
   }
 
   function updateBookmarkButton(btn, isSaved) {
